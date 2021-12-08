@@ -1,0 +1,251 @@
+[
+    {
+        "id": "47ba719a87d0c8d3",
+        "type": "tab",
+        "label": "Smart Contactor",
+        "disabled": false,
+        "info": ""
+    },
+    {
+        "id": "6f7e75de53089104",
+        "type": "mqtt in",
+        "z": "47ba719a87d0c8d3",
+        "name": "",
+        "topic": "switch/lamp/1",
+        "qos": "2",
+        "datatype": "auto",
+        "broker": "10aa1f95b669034a",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "x": 210,
+        "y": 300,
+        "wires": [
+            [
+                "6a8963f104e8eb11"
+            ]
+        ]
+    },
+    {
+        "id": "26ebfb6391adfd3a",
+        "type": "mqtt in",
+        "z": "47ba719a87d0c8d3",
+        "name": "",
+        "topic": "switch/lamp/2",
+        "qos": "2",
+        "datatype": "auto",
+        "broker": "10aa1f95b669034a",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "x": 210,
+        "y": 380,
+        "wires": [
+            [
+                "6a8963f104e8eb11",
+                "8fa06d43a289cfe8"
+            ]
+        ]
+    },
+    {
+        "id": "b4cbcc774e11ac86",
+        "type": "mqtt out",
+        "z": "47ba719a87d0c8d3",
+        "name": "",
+        "topic": "switch/callback/lamp/1",
+        "qos": "",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "10aa1f95b669034a",
+        "x": 960,
+        "y": 300,
+        "wires": []
+    },
+    {
+        "id": "081bb8fed7e4a160",
+        "type": "mqtt out",
+        "z": "47ba719a87d0c8d3",
+        "name": "",
+        "topic": "switch/callback/lamp/2",
+        "qos": "",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "10aa1f95b669034a",
+        "x": 940,
+        "y": 360,
+        "wires": []
+    },
+    {
+        "id": "1f897d591c611600",
+        "type": "ui_template",
+        "z": "47ba719a87d0c8d3",
+        "group": "121ff7a1fbf26d83",
+        "name": "",
+        "order": 1,
+        "width": "0",
+        "height": "0",
+        "format": "<div class=\"hero\">\n    <h1>SMART CONTACTOR</h1>\n    <p>Kelompok IV</p>\n    \n    <!-- DATA -->\n    <div id=\"lamp1Val\" class=\"hidden\">{{msg.payload[0]}}</div>\n    <div id=\"lamp2Val\" class=\"hidden\">{{msg.payload[1]}}</div>\n    <!-- END DATA -->\n    \n    \n    <!-- Menampilkan Data Lampu 1 -->\n    <div class=\"content\">\n        <h5>LAMP 1</h5>\n        <div id=\"lamps-1\" class=\"lamps\">\n            <div class=\"lamp\">\n                <p>Switch Lamp I</p>\n                <label class=\"switch\">\n                    <input id=\"lamp1\" type=\"checkbox\">\n                    <span class=\"slider round\"></span>\n                </label>\n                <div style=\"display:none;\">\n                    <button id=\"lamp1-true\" ng-click=\"send({type:'lamp/1', payload:'true'})\"></button>\n                    <button id=\"lamp1-false\" ng-click=\"send({type:'lamp/1', payload:'false'})\"></button>\n                </div>\n            </div>\n        </div>\n    </div>\n    <!-- END Menampilkan Data Lampu 1 -->\n    \n    <!-- Menampilkan Data Lampu 2 -->\n    <div class=\"content\">\n        <h5>LAMP 2</h5>\n        <div id=\"lamps-2\" class=\"lamps\">\n            <div class=\"lamp\">\n                <p>Switch Lamp II</p>\n                <label class=\"switch\">\n                    <input id=\"lamp2\" type=\"checkbox\">\n                    <span class=\"slider round\"></span>\n                </label>\n                <div style=\"display:none;\">\n                    <button id=\"lamp2-true\" ng-click=\"send({type:'lamp/2', payload:'true'})\"></button>\n                    <button id=\"lamp2-false\" ng-click=\"send({type:'lamp/2', payload:'false'})\"></button>\n                </div>\n            </div>     \n        </div>\n    </div>\n    <!-- END Menampilkan Data Lampu 2 -->\n</div>\n\n<script>\n //on load function\n(function() {\n    // melakukan update nilai switch lampu 1 setiap interval 200 ms\n    setInterval(() => {\n        const lamp1Element = document.querySelector('#lamp1');\n        const lamp1Val = document.querySelector('#lamp1Val').innerHTML === \"true\";\n        lamp1Element.checked = lamp1Val;\n    }, 200)\n    \n    // melakukan update nilai switch lampu 2 setiap interval 200 ms\n    setInterval(() => {\n        const lamp2Element = document.querySelector('#lamp2');\n        const lamp2Val = document.querySelector('#lamp2Val').innerHTML === \"true\";\n        lamp2Element.checked = lamp2Val;\n    }, 200)\n})();\n\n  // hanlde event ketika switch lampu 1 di tekan\n  var overall = document.querySelector('input[id=\"lamp1\"]');\n  overall.addEventListener('click', function(e) {\n    e.preventDefault();\n    const initLamp1Val = document.querySelector('#lamp1Val').innerHTML === \"true\";\n    \n    // kondisi pengiriman lampu 1\n    // menekan tombol secara program untuk melakukan output\n    if(initLamp1Val){\n        document.querySelector('#lamp1-false').click();\n    } else if(!initLamp1Val) {\n        document.querySelector('#lamp1-true').click();\n    }\n\n  });\n  \n  \n  // hanlde event ketika switch lampu 2 di tekan\n  var overall2 = document.querySelector('input[id=\"lamp2\"]');\n  overall2.addEventListener('click', function(e) {\n    e.preventDefault();\n    const initLamp2Val = document.querySelector('#lamp2Val').innerHTML === \"true\";\n    \n    // kondisi pengiriman lampu 2\n    // menekan tombol secara program untuk melakukan output\n    if(initLamp2Val){\n        document.querySelector('#lamp2-false').click();\n    } else if(!initLamp2Val) {\n        document.querySelector('#lamp2-true').click();\n    }\n\n  });\n</script>\n\n\n<!-- style css-->\n<style>\n\n.hidden {\n    display: none;\n}\n    \n.masonry-container{\n    width: 100vw;\n    height: 100vh;\n    display: flex;\n    align-items: center;\n    justify-content: center;\n    position: relative;\n}\n\n.nr-dashboard-cardtitle {\n    display: none;\n}\n\n.nr-dashboard-cardpanel{\n    width: 100%;\n    height: 100%;\n    background-color: #DBE2EF;\n}\n\n.nr-dashboard-template{\n    align-self: center;\n    display: flex;\n    background-color: #DBE2EF;\n}\n\n.group{\n    align-self: center;\n    display: flex;\n    background-color: #DBE2EF;\n}\n\n.mode{\n    display: flex;\n    height: auto;\n    width: auto;\n    justify-content: center;\n    margin: 30px 0px 20px 0px;\n}\n\n.btn1 {\n  background-color: white;\n  border: none;\n  color: #3F72AF;\n  padding: 10px 15px;\n  text-align: center;\n  text-decoration: none;\n  display: inline-block;\n  font-size: 16px;\n  cursor: pointer;\n  min-width: 150px;\n}\n\n.btn2 {\n  background-color: white;\n  border: none;\n  color: #3F72AF;\n  padding: 10px 15px;\n  text-align: center;\n  text-decoration: none;\n  display: inline-block;\n  font-size: 16px;\n  cursor: pointer;\n    min-width: 150px;\n}\n\n.hero{\n    padding: 10vmin;\n    text-align: center;\n    color: yellow;\n    background-color:#F9F7F7;\n}\n\n.lamps{\n    width: 100%;\n    display: flex;\n    flex-direction: column;\n    justify-content: center;\n    align-items: center;\n}\n\n.switch {\n  position: relative;\n  display: inline-block;\n  width: 60px;\n  height: 34px;\n}\n\n.lamp{\n    width: 50%;\n    display: flex;\n    justify-content: space-between;\n    padding: 2vmin;\n}\n\n.lamp-saklar{\n    width: 100%;\n    display: flex;\n    justify-content: center;\n    padding: 0;\n    font-size: 12px;\n}\n\n\n/* Hide default HTML checkbox */\n.switch input {\n  opacity: 0;\n  width: 0;\n  height: 0;\n}\n\n/* The slider */\n.slider {\n  position: absolute;\n  cursor: pointer;\n  top: 0;\n  left: 0;\n  right: 0;\n  bottom: 0;\n  background-color: #ccc;\n  -webkit-transition: .4s;\n  transition: .4s;\n}\n\n.slider:before {\n  position: absolute;\n  content: \"\";\n  height: 26px;\n  width: 26px;\n  left: 4px;\n  bottom: 4px;\n  background-color: white;\n  -webkit-transition: .4s;\n  transition: .4s;\n}\n\ninput:checked + .slider {\n  background-color: #3F72AF;\n}\n\ninput:focus + .slider {\n  box-shadow: 0 0 1px #3F72AF;\n}\n\ninput:checked + .slider:before {\n  -webkit-transform: translateX(26px);\n  -ms-transform: translateX(26px);\n  transform: translateX(26px);\n}\n\n/* Rounded sliders */\n.slider.round {\n  border-radius: 34px;\n}\n\n.slider.round:before {\n  border-radius: 50%;\n}\n\n.content {\n    margin: 5vmin;\n    padding: 3vmin;\n    border-top: 1px solid gray;\n    color: black;\n}\n\n</style>\n",
+        "storeOutMessages": true,
+        "fwdInMessages": true,
+        "resendOnRefresh": true,
+        "templateScope": "local",
+        "className": "",
+        "x": 580,
+        "y": 340,
+        "wires": [
+            [
+                "b167fc85f1136029"
+            ]
+        ]
+    },
+    {
+        "id": "6a8963f104e8eb11",
+        "type": "function",
+        "z": "47ba719a87d0c8d3",
+        "name": "",
+        "func": "// inisialisasi variabel\nvar lamp1 = null\nvar lamp2 = null\n\n// pengecekan topic\nif(msg.topic === \"switch/lamp/1\") lamp1=msg.payload;\nif(msg.topic === \"switch/lamp/2\") lamp2=msg.payload;\n\n// set global variabel apabila variabel ada isinya\nif(lamp1 !== null) global.set(\"lamp1\", lamp1);\nif(lamp2 !== null) global.set(\"lamp2\", lamp2);\n\n// get global variabel apabila variabel kosong\nif(lamp1 === null) lamp1 = global.get(\"lamp1\") || false;\nif(lamp2 === null) lamp2 = global.get(\"lamp2\") || false;\n\n// set payload\nmsg.payload = [lamp1, lamp2];\n\n//mengembalikan pesan untuk diteruskan\nreturn msg;\n\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 440,
+        "y": 340,
+        "wires": [
+            [
+                "1f897d591c611600",
+                "a0518953bd887f9d"
+            ]
+        ]
+    },
+    {
+        "id": "b167fc85f1136029",
+        "type": "function",
+        "z": "47ba719a87d0c8d3",
+        "name": "",
+        "func": "if (msg.type === \"lamp/1\") {\n    return [msg, null,]\n} else if (msg.type === \"lamp/2\") {\n    return [null, msg]\n} else {\n    return null;\n}\n\n",
+        "outputs": 2,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 720,
+        "y": 340,
+        "wires": [
+            [
+                "b4cbcc774e11ac86"
+            ],
+            [
+                "081bb8fed7e4a160"
+            ]
+        ]
+    },
+    {
+        "id": "67a01249f74fc36b",
+        "type": "aedes broker",
+        "z": "47ba719a87d0c8d3",
+        "name": "",
+        "mqtt_port": 1883,
+        "mqtt_ws_bind": "port",
+        "mqtt_ws_port": "",
+        "mqtt_ws_path": "",
+        "cert": "",
+        "key": "",
+        "certname": "",
+        "keyname": "",
+        "dburl": "",
+        "usetls": false,
+        "x": 570,
+        "y": 180,
+        "wires": [
+            [],
+            []
+        ]
+    },
+    {
+        "id": "a0518953bd887f9d",
+        "type": "debug",
+        "z": "47ba719a87d0c8d3",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 670,
+        "y": 600,
+        "wires": []
+    },
+    {
+        "id": "8fa06d43a289cfe8",
+        "type": "debug",
+        "z": "47ba719a87d0c8d3",
+        "name": "",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 460,
+        "y": 620,
+        "wires": []
+    },
+    {
+        "id": "10aa1f95b669034a",
+        "type": "mqtt-broker",
+        "name": "",
+        "broker": "localhost",
+        "port": "1883",
+        "clientid": "",
+        "usetls": false,
+        "protocolVersion": "4",
+        "keepalive": "60",
+        "cleansession": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willPayload": "",
+        "willMsg": {},
+        "sessionExpiry": ""
+    },
+    {
+        "id": "121ff7a1fbf26d83",
+        "type": "ui_group",
+        "name": "switch",
+        "tab": "8bba90127c583cfb",
+        "order": 1,
+        "disp": true,
+        "width": "12",
+        "collapse": false,
+        "className": "group"
+    },
+    {
+        "id": "8bba90127c583cfb",
+        "type": "ui_tab",
+        "name": "smart",
+        "icon": "dashboard",
+        "order": 2,
+        "disabled": false,
+        "hidden": false
+    }
+]
